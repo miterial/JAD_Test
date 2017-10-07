@@ -1,17 +1,13 @@
 package com.svetlana.jad_test;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
                         Fragment selectedFragment = null;
                         switch (item.getItemId()) {
                             case R.id.action_main:
-                                selectedFragment = MainFragment.newInstance();
+                                selectedFragment = HomeFragment.newInstance();
                                 break;
                             case R.id.action_contacts:
                                 selectedFragment = ContactsFragment.newInstance();
@@ -46,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, ContactsFragment.newInstance());
         transaction.commit();
+    }
+
+    public Context getMainActivityContext() {
+        Context context = MainActivity.this;
+        return context;
     }
 
 }
