@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">JAD_Test</string>
+    <string name="title_main">Main</string>
+    <string name="title_contacts">Contacts</string>
+    <string name="header_main">Главная</string>
 </resources>
