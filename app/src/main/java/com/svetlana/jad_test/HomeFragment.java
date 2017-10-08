@@ -7,7 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.svetlana.jad_test.JSON.HomeAdapter;
+import com.svetlana.jad_test.JSON.ParseJSON;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Svetlana on 06.10.2017.
@@ -15,9 +21,10 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
-    private ArrayList<CardListModel> models;
+    private ArrayList<String> models;
     private ListView listView;
     private HomeAdapter homeAdapter;
+    private ArrayList<String> titles;
 
     public static HomeFragment newInstance() {
         HomeFragment homeFragment = new HomeFragment();
@@ -35,9 +42,22 @@ public class HomeFragment extends Fragment {
 
         listView = (ListView) rootView.findViewById(R.id.home_listView);
         models = new ArrayList<>();
-        // TODO: Динамическое получение ip адреса, json
-        models.add(new CardListModel("IP-Address", "127.0.0.1"));
-        models.add(new CardListModel("DateTime", "07.10.2017 21:45"));
+
+        // Компоненты, значения которых нужно получить с сайта
+        Map<String, String[]> cards = new HashMap<>();
+        String[] ipTitle = {"ip"};
+        String[] datetimeTitle = {"date", "time"};
+        String[] headersTitle = {"X-Cloud-Trace-Context", "Upgrade-Insecure-Requests", "Accept-Language",
+                "Host", "Referer", "DNT", "User-Agent", "Accept"};
+        String[] keys = {"http://ip.jsontest.com/", "http://date.jsontest.com", "http://headers.jsontest.com/"};
+        cards.put(keys[0], ipTitle);
+        cards.put(keys[1], datetimeTitle);
+        cards.put(keys[2], headersTitle);
+
+        // Создание карточки
+        for (int i = 0; i < cards.size(); i++)
+            models.add(getCardData(keys[i], cards.get(keys[i])));
+
         homeAdapter = new HomeAdapter(getActivity(), this.models);
         listView.setAdapter(homeAdapter);
 
@@ -45,6 +65,21 @@ public class HomeFragment extends Fragment {
         //https://youtu.be/By_1tpPDt4g?t=18m15s
 
         return rootView;
+    }
+
+    private String getCardData(String key, String[] titles) {
+
+        try {
+            ParseJSON pj = new ParseJSON(key, titles);
+            pj.execute();
+
+            return pj.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

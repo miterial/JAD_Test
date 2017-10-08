@@ -1,4 +1,4 @@
-package com.svetlana.jad_test;
+package com.svetlana.jad_test.JSON;
 
 /**
  * Created by Svetlana on 07.10.2017.

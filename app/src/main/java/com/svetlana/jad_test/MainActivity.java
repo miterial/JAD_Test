@@ -1,6 +1,5 @@
 package com.svetlana.jad_test;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -42,11 +41,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, ContactsFragment.newInstance());
         transaction.commit();
-    }
-
-    public Context getMainActivityContext() {
-        Context context = MainActivity.this;
-        return context;
     }
 
 }

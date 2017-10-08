@@ -1,10 +1,12 @@
-package com.svetlana.jad_test;
+package com.svetlana.jad_test.JSON;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.svetlana.jad_test.R;
 
 import java.util.ArrayList;
 
@@ -43,7 +45,7 @@ public class HomeAdapter extends BaseAdapter {
             convertView = View.inflate(context, R.layout.list_cards, null);
         }
 
-        TextView tvData = (TextView) convertView.findViewById(R.id.tvTitle);
+        TextView tvData = (TextView) convertView.findViewById(R.id.tvCardData);
 
         // Запись информации в карточки
         String modelData = models.get(position);
