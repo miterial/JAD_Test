@@ -15,9 +15,9 @@ import java.util.ArrayList;
 public class HomeAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<CardListModel> models;
+    private ArrayList<String> models;
 
-    public HomeAdapter(Context context, ArrayList<CardListModel> models) {
+    public HomeAdapter(Context context, ArrayList<String> models) {
         this.context = context;
         this.models = models;
     }
@@ -43,12 +43,11 @@ public class HomeAdapter extends BaseAdapter {
             convertView = View.inflate(context, R.layout.list_cards, null);
         }
 
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.textView);
-        TextView tvValue = (TextView) convertView.findViewById(R.id.textView2);
+        TextView tvData = (TextView) convertView.findViewById(R.id.tvTitle);
 
-        CardListModel model = models.get(position);
-        tvTitle.setText(model.title);
-        tvValue.setText(model.value);
+        // Запись информации в карточки
+        String modelData = models.get(position);
+        tvData.setText(modelData);
 
         return convertView;
     }
