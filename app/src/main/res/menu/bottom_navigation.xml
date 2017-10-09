@@ -6,6 +6,10 @@
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="@string/title_main" />
     <item
+        android:id="@+id/empty_item"
+        android:title=" "
+        android:enabled="false"/>
+    <item
         android:id="@+id/action_contacts"
         android:icon="@android:drawable/ic_dialog_email"
         android:title="@string/title_contacts" />

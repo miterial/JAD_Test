@@ -6,4 +6,8 @@
     <string name="email">email: svetlana325@bk.ru</string>
     <string name="phone">phone: +380955454428 (Telegram)</string>
     <string name="repos">https://github.com/miterial; https://bitbucket.org/firestartersolutions/gameone; https://bitbucket.org/svetlana_/filesystem/src</string>
+    <string name="titleEcho">Echo Request</string>
+    <string name="resultTitle">строка результата</string>
+    <string name="request">key/val/k/v</string>
+    <string name="urlTitle">echo.jsontest.com/</string>
 </resources>

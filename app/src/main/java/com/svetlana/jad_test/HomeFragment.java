@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.svetlana.jad_test.JSON.HomeAdapter;
 import com.svetlana.jad_test.JSON.ParseJSON;
+import com.svetlana.jad_test.adapter.HomeAdapterUpper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -21,10 +22,10 @@ import java.util.concurrent.ExecutionException;
 
 public class HomeFragment extends Fragment {
 
-    private ArrayList<String> models;
+    private List<CardItem> models;
     private ListView listView;
-    private HomeAdapter homeAdapter;
-    private ArrayList<String> titles;
+    private HomeAdapterUpper homeAdapter;
+    private List<CardItem> titles;
 
     public static HomeFragment newInstance() {
         HomeFragment homeFragment = new HomeFragment();
@@ -40,7 +41,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.home, container, false);
 
-        listView = (ListView) rootView.findViewById(R.id.home_listView);
+        listView = (ListView) rootView.findViewById(R.id.upper_listView);
         models = new ArrayList<>();
 
         // Компоненты, значения которых нужно получить с сайта
@@ -55,10 +56,11 @@ public class HomeFragment extends Fragment {
         cards.put(keys[2], headersTitle);
 
         // Создание карточки
-        for (int i = 0; i < cards.size(); i++)
+        for (int i = 0; i < cards.size(); i++) {
             models.add(getCardData(keys[i], cards.get(keys[i])));
+        }
 
-        homeAdapter = new HomeAdapter(getActivity(), this.models);
+        homeAdapter = new HomeAdapterUpper(getActivity(), this.models, R.layout.card_item_upper);
         listView.setAdapter(homeAdapter);
 
         // Обработка нажатия
@@ -67,16 +69,13 @@ public class HomeFragment extends Fragment {
         return rootView;
     }
 
-    private String getCardData(String key, String[] titles) {
+    private CardItem getCardData(String key, String[] titles) {
 
         try {
             ParseJSON pj = new ParseJSON(key, titles);
             pj.execute();
-
             return pj.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return null;

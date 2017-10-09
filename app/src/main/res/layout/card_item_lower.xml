@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view2"
+    card_view:cardElevation="4dp"
+    card_view:cardCornerRadius="4dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/tvEchoTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/titleEcho"/>
+
+        <TextView
+            android:id="@+id/tvEchoUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvEchoTitle"
+            android:text="@string/urlTitle"/>
+
+        <EditText
+            android:id="@+id/etRequest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:layout_toEndOf="@+id/tvEchoUrl"
+            android:text="@string/request" />
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/etRequest"
+            android:layout_alignParentEnd="true"
+            android:text="Send" />
+
+        <TextView
+            android:id="@+id/tvEchoResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnSend"
+            android:text="@string/resultTitle"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
