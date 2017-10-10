@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Svetlana on 10.10.2017.
@@ -29,7 +31,6 @@ public class CardAdapterLower extends RecyclerView.Adapter<CardAdapterLower.View
     private EditText et;
 
     private List<String> keyList;
-    private List<String> valueList;
     private List<CardModel> models;
     private Context context;
 
@@ -71,10 +72,10 @@ public class CardAdapterLower extends RecyclerView.Adapter<CardAdapterLower.View
         private void echoPerform() {
             et = (EditText) itemView.findViewById(R.id.etRequest);
             String url = et.getText().toString();
+
             String[] tokens = url.split("[/]");
 
             keyList = new ArrayList<String>(tokens.length / 2 + 1);
-            valueList = new ArrayList<String>(tokens.length / 2 + 1);
             for (String t : tokens) {
                 if (!t.equals("")) {
                     int pos = Arrays.asList(tokens).indexOf(t);
@@ -94,11 +95,32 @@ public class CardAdapterLower extends RecyclerView.Adapter<CardAdapterLower.View
                 e.printStackTrace();
             }
         }
-    }
 
-    //Выполнение действия
-    private void validationPerform() {
-        Toast.makeText(getContext(), "Validation",Toast.LENGTH_LONG).show();
+        //Выполнение действия
+        private void validationPerform() {
+            et = (EditText) itemView.findViewById(R.id.etRequest);
+
+            String[] keyArr;
+            String url = "http://validate/jsontest.com/?json=" + et.getText().toString();
+
+            //TODO: регулярное выражение
+            Pattern p = Pattern.compile("^[\\{]\"[a-zA-Z]+\":\"[a-zA-Z]\"");
+            Matcher m = p.matcher(et.getText().toString());
+
+            //Назначение ключей в зависимости от корректности введёного запроса
+            if(m.matches())
+                keyArr = new String[] {"object_or_array", "empty", "parse_time_nanoseconds",
+                        "validate", "size"};
+            else keyArr = new String[] {"error", "object_or_array", "error_info", "validate"};
+
+            try {
+                ParseJSON pj = new ParseJSON(url, keyArr, "Validation");
+                pj.execute();
+                models.set(1, pj.get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public CardAdapterLower(Context context, List<CardModel> models) {
