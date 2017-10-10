@@ -80,21 +80,29 @@ public class HomeFragment extends Fragment {
 
     }
 
+    //Заполнение верхнего списка
     private void initUpperCards(View rootView) {
         RecyclerView recViewUpper = (RecyclerView) rootView.findViewById(R.id.upper_recyclerV);
         modelsUpper = new ArrayList<>();
-        List<String> keys = new ArrayList<>();
-        keys.add("k1");
-        keys.add("k1");
-        List<String> values = new ArrayList<>();
-        values.add("v1");
-        values.add("v1");
 
-        //TODO: getcarddata()
-        modelsUpper.add(new CardModel(keys, values, "IP-Address"));
-        modelsUpper.add(new CardModel(keys, values, "DateTime"));
-        modelsUpper.add(new CardModel(keys, values, "Headers"));
+        // Компоненты, значения которых нужно получить с сайта
+        String[] ipTitle = {"ip"};
+        String[] datetimeTitle = {"date", "time"};
+        String[] headersTitle = {"X-Cloud-Trace-Context", "Upgrade-Insecure-Requests", "Accept-Language",
+                "Host", "Referer", "DNT", "User-Agent", "Accept"};
+        String[] keys = {"http://ip.jsontest.com/", "http://date.jsontest.com", "http://headers.jsontest.com/"};
+        items.put(keys[0], ipTitle);
+        items.put(keys[1], datetimeTitle);
+        items.put(keys[2], headersTitle);
 
+        String[] cardTitles = {"IP-Address", "Date & Time", "Headers"};
+
+        // Создание карточки
+        for (int i = 0; i < items.size(); i++) {
+            modelsUpper.add(getCardData(keys[i], items.get(keys[i]), cardTitles[i]));
+        }
+
+        //Присвоение адаптера
         CardAdapterUpper hAdap1 = new CardAdapterUpper(getContext(), modelsUpper);
 
         recViewUpper.setAdapter(hAdap1);

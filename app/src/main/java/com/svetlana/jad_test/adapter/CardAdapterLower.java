@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.svetlana.jad_test.CardModel;
 import com.svetlana.jad_test.JSON.ParseJSON;
@@ -41,38 +42,63 @@ public class CardAdapterLower extends RecyclerView.Adapter<CardAdapterLower.View
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitleLower);
             tvValue = (TextView) itemView.findViewById(R.id.tvValueLower);
             btnSend = (Button) itemView.findViewById(R.id.btnSend);
-            et = (EditText) itemView.findViewById(R.id.etRequest);
 
             btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*String url = et.getText().toString();
 
-                    String[] tokens = url.split("[/]");
-
-                    keyList = new ArrayList<String>(tokens.length / 2 + 1);
-                    valueList = new ArrayList<String>(tokens.length / 2 + 1);
-                    for (String t : tokens) {
-                        if (!t.equals("")) {
-                            int pos = keyList.indexOf(t);
-                            if (pos % 2 == 0) {
-                                keyList.add(t);
-                            }
-                        }
+                    int position = getLayoutPosition();
+                    switch (position) {
+                        case 0:
+                            echoPerform();
+                            break;
+                        case 1:
+                            validationPerform();
+                            break;
                     }
-                    try {
-                        String[] keyArr = new String[keyList.size()];
-                        ParseJSON pj = new ParseJSON("http://http://echo.jsontest.com/" + url,
-                                keyList.toArray(keyArr), "Echo");
-                        pj.execute();
-                        models.set(0,pj.get());
-                        notifyItemChanged(0);
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }*/
-                }
+
+                    notifyDataSetChanged();
+
+                        tvTitle.setText(models.get(position).getCardTitle());
+                        tvValue.setText(getResult(position));
+                    }
+
             });
+
         }
+
+        //Выполнение действия для первой карточки (Echo Request)
+        private void echoPerform() {
+            et = (EditText) itemView.findViewById(R.id.etRequest);
+            String url = et.getText().toString();
+            String[] tokens = url.split("[/]");
+
+            keyList = new ArrayList<String>(tokens.length / 2 + 1);
+            valueList = new ArrayList<String>(tokens.length / 2 + 1);
+            for (String t : tokens) {
+                if (!t.equals("")) {
+                    int pos = Arrays.asList(tokens).indexOf(t);
+                    if (pos % 2 == 0) {
+                        keyList.add(t);
+                    }
+                }
+            }
+            try {
+                String[] keyArr = new String[keyList.size()];
+                keyList.toArray(keyArr);
+                ParseJSON pj = new ParseJSON("http://echo.jsontest.com/" + url, keyArr, "EchoRes");
+                pj.execute();
+                models.set(0, pj.get());
+
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //Выполнение действия
+    private void validationPerform() {
+        Toast.makeText(getContext(), "Validation",Toast.LENGTH_LONG).show();
     }
 
     public CardAdapterLower(Context context, List<CardModel> models) {
@@ -97,35 +123,26 @@ public class CardAdapterLower extends RecyclerView.Adapter<CardAdapterLower.View
         CardModel card = models.get(position);
 
         TextView tv = holder.tvTitle;
-
         TextView tv2 = holder.tvValue;
 
+        tv.setText(card.getCardTitle());
+        tv2.setText(getResult(position));
+    }
+
+    //Вывод результата в виде, удобном для чтения
+    private String getResult(int position) {
         String res = "";
-        if(!models.isEmpty()) {
+        if (!models.isEmpty()) {
             for (int i = 0; i < models.get(position).getKeys().size(); i++) {
                 res += models.get(position).getKeys().get(i) + " - "
                         + models.get(position).getValues().get(i) + "\n";
             }
-
-            tv.setText(card.getCardTitle());
-            tv2.setText(res);
         }
+        return res;
     }
 
     @Override
     public int getItemCount() {
         return models.size();
-    }
-
-    public String getEditTextData() {
-        return et.getText().toString();
-    }
-
-    public List<String> getKeyList() {
-        return keyList;
-    }
-
-    public void setModels(List<CardModel> models) {
-        this.models = models;
     }
 }
