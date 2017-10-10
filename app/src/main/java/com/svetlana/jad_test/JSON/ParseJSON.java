@@ -2,7 +2,7 @@ package com.svetlana.jad_test.JSON;
 
 import android.os.AsyncTask;
 
-import com.svetlana.jad_test.CardItem;
+import com.svetlana.jad_test.CardModel;
 
 import org.json.JSONObject;
 
@@ -18,18 +18,20 @@ import java.util.List;
  * Created by Svetlana on 07.10.2017.
  */
 
-public class ParseJSON extends AsyncTask<Void, Void, CardItem> {
+public class ParseJSON extends AsyncTask<Void, Void, CardModel> {
 
     private String urlString;
     private String[] titles;
+    private String cardTitle;
 
-    public ParseJSON(String key, String[] titles) {
+    public ParseJSON(String key, String[] titles, String cardTitle) {
         this.urlString = key;
         this.titles = titles;
+        this.cardTitle = cardTitle;
     }
 
     @Override
-    protected CardItem doInBackground(Void... params) {
+    protected CardModel doInBackground(Void... params) {
         List<String> tmpKeys = new ArrayList<>();
         List<String> tmpValues = new ArrayList<>();
 
@@ -65,7 +67,7 @@ public class ParseJSON extends AsyncTask<Void, Void, CardItem> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new CardItem(tmpKeys, tmpValues);
+        return new CardModel(tmpKeys, tmpValues, cardTitle);
     }
 
 }

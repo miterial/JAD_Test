@@ -2,13 +2,15 @@ package com.svetlana.jad_test;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.svetlana.jad_test.JSON.ParseJSON;
-import com.svetlana.jad_test.adapter.HomeAdapterUpper;
+import com.svetlana.jad_test.adapter.CardAdapterLower;
+import com.svetlana.jad_test.adapter.CardAdapterUpper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,14 +24,12 @@ import java.util.concurrent.ExecutionException;
 
 public class HomeFragment extends Fragment {
 
-    private List<CardItem> models;
-    private ListView listView;
-    private HomeAdapterUpper homeAdapter;
-    private List<CardItem> titles;
+    private List<CardModel> modelsUpper, modelsLower;
+    Map<String, String[]> items;
+    String URL;
 
     public static HomeFragment newInstance() {
-        HomeFragment homeFragment = new HomeFragment();
-        return homeFragment;
+        return new HomeFragment();
     }
 
     @Override
@@ -39,40 +39,74 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.home, container, false);
+        items = new HashMap<>();
 
-        listView = (ListView) rootView.findViewById(R.id.upper_listView);
-        models = new ArrayList<>();
+        initUpperCards(rootView);
 
-        // Компоненты, значения которых нужно получить с сайта
-        Map<String, String[]> cards = new HashMap<>();
-        String[] ipTitle = {"ip"};
-        String[] datetimeTitle = {"date", "time"};
-        String[] headersTitle = {"X-Cloud-Trace-Context", "Upgrade-Insecure-Requests", "Accept-Language",
-                "Host", "Referer", "DNT", "User-Agent", "Accept"};
-        String[] keys = {"http://ip.jsontest.com/", "http://date.jsontest.com", "http://headers.jsontest.com/"};
-        cards.put(keys[0], ipTitle);
-        cards.put(keys[1], datetimeTitle);
-        cards.put(keys[2], headersTitle);
-
-        // Создание карточки
-        for (int i = 0; i < cards.size(); i++) {
-            models.add(getCardData(keys[i], cards.get(keys[i])));
-        }
-
-        homeAdapter = new HomeAdapterUpper(getActivity(), this.models, R.layout.card_item_upper);
-        listView.setAdapter(homeAdapter);
+        initLowerCards(rootView);
 
         // Обработка нажатия
-        //https://youtu.be/By_1tpPDt4g?t=18m15s
 
         return rootView;
     }
 
-    private CardItem getCardData(String key, String[] titles) {
+    public void setUrl(String u) {
+        URL = "http://http://echo.jsontest.com/" + u;
+    }
+
+    private void initLowerCards(View rootView) {
+        RecyclerView recViewLower = (RecyclerView) rootView.findViewById(R.id.lower_recyclerV);
+
+        modelsLower = new ArrayList<>();
+
+        List<String> keys = new ArrayList<>();
+        keys.add("k1");
+        keys.add("k1");
+        List<String> values = new ArrayList<>();
+        values.add("v1");
+        values.add("v1");
+
+        modelsLower.add(new CardModel(keys, values, "Echo"));
+        modelsLower.add(new CardModel(keys, values, "Validation"));
+
+        CardAdapterLower hAdap2 = new CardAdapterLower(getContext(), modelsLower);
+        recViewLower.setAdapter(hAdap2);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recViewLower.setLayoutManager(llm);
+
+    }
+
+    private void initUpperCards(View rootView) {
+        RecyclerView recViewUpper = (RecyclerView) rootView.findViewById(R.id.upper_recyclerV);
+        modelsUpper = new ArrayList<>();
+        List<String> keys = new ArrayList<>();
+        keys.add("k1");
+        keys.add("k1");
+        List<String> values = new ArrayList<>();
+        values.add("v1");
+        values.add("v1");
+
+        //TODO: getcarddata()
+        modelsUpper.add(new CardModel(keys, values, "IP-Address"));
+        modelsUpper.add(new CardModel(keys, values, "DateTime"));
+        modelsUpper.add(new CardModel(keys, values, "Headers"));
+
+        CardAdapterUpper hAdap1 = new CardAdapterUpper(getContext(), modelsUpper);
+
+        recViewUpper.setAdapter(hAdap1);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recViewUpper.setLayoutManager(llm);
+    }
+
+    private CardModel getCardData(String key, String[] titles, String cardTitle) {
 
         try {
-            ParseJSON pj = new ParseJSON(key, titles);
+            ParseJSON pj = new ParseJSON(key, titles, cardTitle);
             pj.execute();
             return pj.get();
         } catch (InterruptedException | ExecutionException e) {
@@ -80,5 +114,5 @@ public class HomeFragment extends Fragment {
         }
         return null;
     }
-
 }
+

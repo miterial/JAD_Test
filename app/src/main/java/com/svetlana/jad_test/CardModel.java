@@ -7,13 +7,15 @@ import java.util.List;
  * Created by Svetlana on 09.10.2017.
  */
 
-public class CardItem {
-    public List<String> keys;
-    public List<String> values;
+public class CardModel {
+    private List<String> keys;
+    private List<String> values;
+    private String cardTitle;
 
-    public CardItem(List<String> keys, List<String> values) {
+    public CardModel(List<String> keys, List<String> values, String cardTitle) {
         this.keys = keys;
         this.values = values;
+        this.cardTitle = cardTitle;
     }
 
     public List<String> getKeys() {
@@ -30,5 +32,13 @@ public class CardItem {
 
     public void setValues(List<String> values) {
         this.values = values;
+    }
+
+    public String getCardTitle() {
+        return cardTitle;
+    }
+
+    public void setCardTitle(String cardTitle) {
+        this.cardTitle = cardTitle;
     }
 }
