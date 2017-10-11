@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.svetlana.jad_test.JSON.ParseJSON;
+import com.svetlana.jad_test.adapter.CardAdapter;
 import com.svetlana.jad_test.adapter.CardAdapterLower;
 import com.svetlana.jad_test.adapter.CardAdapterUpper;
 
@@ -41,19 +42,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.home, container, false);
-        items = new HashMap<>();
 
         initUpperCards(rootView);
 
         initLowerCards(rootView);
 
-        // Обработка нажатия
-
         return rootView;
-    }
-
-    public void setUrl(String u) {
-        URL = "http://http://echo.jsontest.com/" + u;
     }
 
     private void initLowerCards(View rootView) {
@@ -71,7 +65,7 @@ public class HomeFragment extends Fragment {
         modelsLower.add(new CardModel(keys, values, "Echo"));
         modelsLower.add(new CardModel(keys, values, "Validation"));
 
-        CardAdapterLower hAdap2 = new CardAdapterLower(getContext(), modelsLower);
+        CardAdapter hAdap2 = new CardAdapterLower(modelsLower, getContext());
         recViewLower.setAdapter(hAdap2);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
@@ -84,7 +78,7 @@ public class HomeFragment extends Fragment {
     private void initUpperCards(View rootView) {
         RecyclerView recViewUpper = (RecyclerView) rootView.findViewById(R.id.upper_recyclerV);
         modelsUpper = new ArrayList<>();
-
+        items = new HashMap<>();
         // Компоненты, значения которых нужно получить с сайта
         String[] ipTitle = {"ip"};
         String[] datetimeTitle = {"date", "time"};
@@ -103,7 +97,7 @@ public class HomeFragment extends Fragment {
         }
 
         //Присвоение адаптера
-        CardAdapterUpper hAdap1 = new CardAdapterUpper(getContext(), modelsUpper);
+        CardAdapter hAdap1 = new CardAdapterUpper(modelsUpper, getContext());
 
         recViewUpper.setAdapter(hAdap1);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
