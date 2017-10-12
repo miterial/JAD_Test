@@ -15,18 +15,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:padding="10dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingBottom="2dp"
+        android:paddingEnd="2dp"
+        android:paddingTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#7b7b7b"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/etRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Enter request"
+        android:minWidth="200dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lower_recyclerV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:paddingEnd="2dp"
+        android:paddingTop="10dp"
         android:layout_weight="1"
-        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </LinearLayout>

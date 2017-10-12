@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.svetlana.jad_test.CardModel;
 import com.svetlana.jad_test.JSON.ParseJSON;
@@ -24,30 +24,31 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
 
     protected List<CardModel> models;
     protected Context context;
-    protected int titleID;
-    protected int valueID;
+
+    String data = "";
 
     public CardAdapter(List<CardModel> models, Context context) {
         this.models = models;
         this.context = context;
     }
 
+    public void setData(CharSequence data) {
+        this.data = data.toString().trim();
+    }
+
     class ViewHolderCard extends RecyclerView.ViewHolder {
         TextView tvTitle, tvValue;
-        Button btnSend;
+        private Button btnSend;
 
         ViewHolderCard(View itemView) {
             super(itemView);
 
-            int g = getLayoutPosition();
             if(itemView.getId() == R.id.listview_upper) {
                 tvTitle = (TextView) itemView.findViewById(R.id.tvTitleUpper);
                 tvValue = (TextView) itemView.findViewById(R.id.tvValueUpper);
             }
 
             else if(itemView.getId() == R.id.listview_lower) {
-                titleID = R.id.tvTitleLower;
-                valueID = R.id.tvValueLower;
                 tvTitle = (TextView) itemView.findViewById(R.id.tvTitleLower);
                 tvValue = (TextView) itemView.findViewById(R.id.tvValueLower);
                 btnSend = (Button) itemView.findViewById(R.id.btnSend);
@@ -55,6 +56,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
                 btnSend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(data.equals("")) {
+                            Toast.makeText(context, "Введите данные", Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
                         int position = getLayoutPosition();
                         switch (position) {
@@ -76,14 +81,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
             }
         }
 
-        private EditText et;
-
         //Выполнение действия для первой карточки (Echo Request)
         private void echoPerform() {
-            et = (EditText) itemView.findViewById(R.id.etRequest);
-            String url = et.getText().toString();
-
-            String[] tokens = url.split("[/]");
+            String[] tokens = data.split("[/]");
 
             //Получение списка ключей, которые нужно искать в файле json
             List<String> keyList = new ArrayList<String>(tokens.length / 2 + 1);
@@ -99,7 +99,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
                 //Получение результата
                 String[] keyArr = new String[keyList.size()];
                 keyList.toArray(keyArr);
-                ParseJSON pj = new ParseJSON("http://echo.jsontest.com/" + url, keyArr, "EchoRes");
+                ParseJSON pj = new ParseJSON("http://echo.jsontest.com/" + data, keyArr, models.get(0).getCardTitle());
                 pj.execute();
                 models.set(0, pj.get());
 
@@ -110,14 +110,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
 
         //Выполнение действия валидации введённой строки в соответствии с
         private void validationPerform() {
-            et = (EditText) itemView.findViewById(R.id.etRequest);
 
             String[] keyArr;
-            String url = "http://validate/jsontest.com/?json=" + et.getText().toString();
+            String url = "http://validate.jsontest.com/?json=" + data;
 
-            //TODO: регулярное выражение
-            Pattern p = Pattern.compile("[a-zA-Z]+");
-            Matcher m = p.matcher(et.getText().toString());
+            Pattern p = Pattern.compile("^\\{\"[a-zA-Z]+\":\"[a-zA-Z]+\"\\}");
+            Matcher m = p.matcher(data);
 
             //Назначение ключей в зависимости от корректности введёного запроса
             if(m.matches())
@@ -126,7 +124,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
             else keyArr = new String[] {"error", "object_or_array", "error_info", "validate"};
 
             try {
-                ParseJSON pj = new ParseJSON(url, keyArr, "Validation");
+                ParseJSON pj = new ParseJSON(url, keyArr, models.get(1).getCardTitle());
                 pj.execute();
                 models.set(1, pj.get());
             } catch (InterruptedException | ExecutionException e) {
@@ -159,7 +157,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
         return models.size();
     }
 
-    protected String getResult(int position) {
+    private String getResult(int position) {
         String res = "";
         if (!models.isEmpty()) {
             for (int i = 0; i < models.get(position).getKeys().size(); i++) {

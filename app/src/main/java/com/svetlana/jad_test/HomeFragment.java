@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.svetlana.jad_test.JSON.ParseJSON;
 import com.svetlana.jad_test.adapter.CardAdapter;
@@ -27,7 +30,6 @@ public class HomeFragment extends Fragment {
 
     private List<CardModel> modelsUpper, modelsLower;
     Map<String, String[]> items;
-    String URL;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -56,21 +58,37 @@ public class HomeFragment extends Fragment {
         modelsLower = new ArrayList<>();
 
         List<String> keys = new ArrayList<>();
-        keys.add("k1");
-        keys.add("k1");
+        keys.add("");
         List<String> values = new ArrayList<>();
-        values.add("v1");
-        values.add("v1");
+        values.add("");
 
         modelsLower.add(new CardModel(keys, values, "Echo"));
         modelsLower.add(new CardModel(keys, values, "Validation"));
 
-        CardAdapter hAdap2 = new CardAdapterLower(modelsLower, getContext());
+        final CardAdapter hAdap2 = new CardAdapterLower(modelsLower, getContext());
         recViewLower.setAdapter(hAdap2);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         recViewLower.setLayoutManager(llm);
+
+        EditText editText = (EditText) rootView.findViewById(R.id.etRequest);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                hAdap2.setData(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
     }
 

@@ -4,7 +4,7 @@
     <string name="title_contacts">Contacts</string>
     <string name="header_main">Главная</string>
     <string name="email">email: svetlana325@bk.ru</string>
-    <string name="phone">phone: +380955454428 (Telegram)</string>
+    <string name="phone">phone: +380955454428 (Telegram, Skype)</string>
     <string name="repos">https://github.com/miterial; https://bitbucket.org/firestartersolutions/gameone; https://bitbucket.org/svetlana_/filesystem/src</string>
     <string name="titleEcho">Echo Request</string>
     <string name="resultTitle">строка результата</string>

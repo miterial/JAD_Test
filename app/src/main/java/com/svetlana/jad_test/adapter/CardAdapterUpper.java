@@ -1,11 +1,8 @@
 package com.svetlana.jad_test.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.svetlana.jad_test.CardModel;
 import com.svetlana.jad_test.R;
@@ -27,7 +24,7 @@ public class CardAdapterUpper extends CardAdapter {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        return new ViewHolderCard(inflater.inflate(R.layout.card_item_upper, parent, false));
+        return new ViewHolderCard(inflater.inflate(R.layout.homecard_item_upper, parent, false));
     }
 
     @Override
