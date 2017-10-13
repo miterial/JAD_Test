@@ -5,27 +5,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 /**
- * Created by Svetlana on 06.10.2017.
+ * Класс представляет фрагмент страницы контактов
  */
 
 public class ContactsFragment extends Fragment {
-    String[] data = {"E-mail", "Phone", "Projects"};
 
-    GridView gvMain;
-    ArrayAdapter<String> adapter;
-
+    //Создание нового экземпляра фрагмента Главного меню
     public static ContactsFragment newInstance() {
         ContactsFragment contactsFragment = new ContactsFragment();
         return contactsFragment;

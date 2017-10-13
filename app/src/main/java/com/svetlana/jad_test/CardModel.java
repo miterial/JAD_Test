@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Svetlana on 09.10.2017.
+ * Класс представляет модель карточки
  */
 
 public class CardModel {
-    private List<String> keys;
-    private List<String> values;
+    //Список ключей
+    private ArrayList<String> keys;
+    //Список значений
+    private ArrayList<String> values;
+    //Заголовок карточки
     private String cardTitle;
 
-    public CardModel(List<String> keys, List<String> values, String cardTitle) {
+    public CardModel(ArrayList<String> keys, ArrayList<String> values, String cardTitle) {
         this.keys = keys;
         this.values = values;
         this.cardTitle = cardTitle;
@@ -22,15 +25,15 @@ public class CardModel {
         return keys;
     }
 
-    public void setKeys(List<String> keys) {
+    public void setKeys(ArrayList<String> keys) {
         this.keys = keys;
     }
 
-    public List<String> getValues() {
+    public ArrayList<String> getValues() {
         return values;
     }
 
-    public void setValues(List<String> values) {
+    public void setValues(ArrayList<String> values) {
         this.values = values;
     }
 

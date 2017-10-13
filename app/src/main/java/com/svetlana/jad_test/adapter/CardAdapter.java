@@ -13,25 +13,27 @@ import com.svetlana.jad_test.CardModel;
 import com.svetlana.jad_test.JSON.ParseJSON;
 import com.svetlana.jad_test.R;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+/*
+*   Класс-адаптер к двум видам карточек
+*/
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard>{
 
-    protected List<CardModel> models;
-    protected Context context;
+    //Список карточек
+    List<CardModel> models;
+    private Context context;
 
-    String data = "";
+    //Строка для значения из EditText
+    private String data = "";
 
-    public CardAdapter(List<CardModel> models, Context context) {
+    CardAdapter(List<CardModel> models, Context context) {
         this.models = models;
         this.context = context;
     }
 
+    //Установить значение для пользовательского запроса
     public void setData(CharSequence data) {
         this.data = data.toString().trim();
     }
@@ -43,31 +45,37 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
         ViewHolderCard(View itemView) {
             super(itemView);
 
-            if(itemView.getId() == R.id.listview_upper) {
+            //Инициализация объектов view в зависимости от того, к какому виду принадлежит layout
+            if(itemView.getId() == R.id.upper_card) {
                 tvTitle = (TextView) itemView.findViewById(R.id.tvTitleUpper);
                 tvValue = (TextView) itemView.findViewById(R.id.tvValueUpper);
             }
 
-            else if(itemView.getId() == R.id.listview_lower) {
+            else if(itemView.getId() == R.id.lower_card) {
                 tvTitle = (TextView) itemView.findViewById(R.id.tvTitleLower);
                 tvValue = (TextView) itemView.findViewById(R.id.tvValueLower);
                 btnSend = (Button) itemView.findViewById(R.id.btnSend);
 
+                //Назначение обработчика кнопке по нажатию
                 btnSend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //Если текстовое поле пустое
                         if(data.equals("")) {
                             Toast.makeText(context, "Введите данные", Toast.LENGTH_LONG).show();
                             return;
                         }
 
+                        //Выполнение действия в зависимости от номера карточки в списке
                         int position = getLayoutPosition();
                         switch (position) {
                             case 0:
-                                echoPerform();
+                                //Выполнение действия для первой карточки (Echo Request)
+                                performClick(0, "echo", data, models.get(0).getCardTitle());
                                 break;
                             case 1:
-                                validationPerform();
+                                //Выполнение действия валидации введённой строки в соответствии с регулярным выражением
+                                performClick(1, "validate", "?json=" + data, models.get(1).getCardTitle());
                                 break;
                         }
 
@@ -81,52 +89,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
             }
         }
 
-        //Выполнение действия для первой карточки (Echo Request)
-        private void echoPerform() {
-            String[] tokens = data.split("[/]");
-
-            //Получение списка ключей, которые нужно искать в файле json
-            List<String> keyList = new ArrayList<String>(tokens.length / 2 + 1);
-            for (String t : tokens) {
-                if (!t.equals("")) {
-                    int pos = Arrays.asList(tokens).indexOf(t);
-                    if (pos % 2 == 0) {
-                        keyList.add(t);
-                    }
-                }
-            }
+        private void performClick(int pos, String service, String data, String cardTitle) {
             try {
                 //Получение результата
-                String[] keyArr = new String[keyList.size()];
-                keyList.toArray(keyArr);
-                ParseJSON pj = new ParseJSON("http://echo.jsontest.com/" + data, models.get(0).getCardTitle());
+                ParseJSON pj = new ParseJSON(service, data, cardTitle);
                 pj.execute();
-                models.set(0, pj.get());
-
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //Выполнение действия валидации введённой строки в соответствии с
-        private void validationPerform() {
-
-            String[] keyArr;
-            String url = "http://validate.jsontest.com/?json=" + data;
-
-            Pattern p = Pattern.compile("^\\{\"[a-zA-Z]+\":\"[a-zA-Z]+\"\\}");
-            Matcher m = p.matcher(data);
-
-            //Назначение ключей в зависимости от корректности введёного запроса
-            if(m.matches())
-                keyArr = new String[] {"object_or_array", "empty", "parse_time_nanoseconds",
-                        "validate", "size"};
-            else keyArr = new String[] {"error", "object_or_array", "error_info", "validate"};
-
-            try {
-                ParseJSON pj = new ParseJSON(url, models.get(1).getCardTitle());
-                pj.execute();
-                models.set(1, pj.get());
+                models.set(pos, pj.get());
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
@@ -157,14 +125,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
         return models.size();
     }
 
+    //Построчный вывод в TextView теста из файла json в виде "ключ" - "значение"
     private String getResult(int position) {
         String res = "";
-        if (!models.isEmpty()) {
+        if (!models.isEmpty())
             for (int i = 0; i < models.get(position).getKeys().size(); i++) {
                 res += models.get(position).getKeys().get(i) + " - "
                         + models.get(position).getValues().get(i) + "\n";
             }
-        }
         return res;
     }
 }

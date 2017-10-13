@@ -17,7 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by Svetlana on 07.10.2017.
+ * Класс представляет интерфейс для получения списка ключей и значений из файла в формате json
+ * Результатом работы будет карточка - объект класс CardModel
  */
 
 public class ParseJSON extends AsyncTask<Void, Void, CardModel> {
@@ -25,21 +26,31 @@ public class ParseJSON extends AsyncTask<Void, Void, CardModel> {
     private String urlString;
     private String cardTitle;
 
-    public ParseJSON(String s, String cardTitle) {
-        this.urlString = "http://" + s + ".jsontest.com";
+    StringBuffer sb = new StringBuffer("http://.jsontest.com/");
+
+    public ParseJSON(String service, String cardTitle) {
+        sb.insert(7, service);
+        this.urlString = sb.toString();
+        this.cardTitle = cardTitle;
+    }
+
+    public ParseJSON(String service, String data, String cardTitle) {
+        sb.insert(7, service);
+        sb.append(data);
+        this.urlString = sb.toString();
         this.cardTitle = cardTitle;
     }
 
     @Override
     protected CardModel doInBackground(Void... params) {
-        List<String> tmpKeys = new ArrayList<>();
-        List<String> tmpValues = new ArrayList<>();
+        ArrayList<String> tmpKeys = new ArrayList<>();
+        ArrayList<String> tmpValues = new ArrayList<>();
 
         try {
             URL url = new URL(urlString);
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod("POST");
             urlConnection.connect();
 
             InputStream inputStream = urlConnection.getInputStream();
@@ -53,9 +64,6 @@ public class ParseJSON extends AsyncTask<Void, Void, CardModel> {
             }
 
             String resultJSON = buffer.toString();
-
-            //Получение списка ключей
-            String[] tokens = resultJSON.split("\\{\"");
 
             // Получение результата из файла json
             JSONObject dataObj;

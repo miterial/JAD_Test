@@ -10,7 +10,7 @@ import com.svetlana.jad_test.R;
 import java.util.List;
 
 /**
- * Created by Svetlana on 10.10.2017.
+ * Класс предоставляет xml второго вида карточек для размещения во фрагменте HomeFragment
  */
 
 public class CardAdapterLower extends CardAdapter  {

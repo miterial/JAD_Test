@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by Svetlana on 06.10.2017.
+ * Класс представляет экран главной страницы
  */
 
 public class HomeFragment extends Fragment {
@@ -64,14 +64,12 @@ public class HomeFragment extends Fragment {
         //Заголовки карточек
         String[] cardTitles = {"IP-Address", "Date & Time", "Headers"};
 
-        // Создание карточки
-        for (int i = 0; i < urls.length; i++) {
+        // Создание карточек
+        for (int i = 0; i < urls.length; i++)
             modelsUpper.add(getCardData(urls[i], cardTitles[i]));
-        }
 
         //Присвоение адаптера
         CardAdapter hAdap1 = new CardAdapterUpper(modelsUpper, getContext());
-
         recViewUpper.setAdapter(hAdap1);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -80,32 +78,34 @@ public class HomeFragment extends Fragment {
 
     //Инициализация нижнего списка карточек
     private void initLowerCards(View rootView) {
+        // Список карточек
         RecyclerView recViewLower = (RecyclerView) rootView.findViewById(R.id.lower_recyclerV);
-
         List<CardModel> modelsLower = new ArrayList<>();
 
-        List<String> keys = new ArrayList<>();
-        List<String> values = new ArrayList<>();
+        //Заголовки карточек
+        String[] cardTitles = {"Echo", "Validation"};
 
-        modelsLower.add(new CardModel(keys, values, "Echo"));
-        modelsLower.add(new CardModel(keys, values, "Validation"));
+        //Создание двух пустых карточек с заголовками
+        for (int i = 0; i < cardTitles.length; i++)
+            modelsLower.add(new CardModel(new ArrayList<String>(), new ArrayList<String>(), cardTitles[i]));
 
+        //Присвоение адаптера
         final CardAdapter hAdap2 = new CardAdapterLower(modelsLower, getContext());
         recViewLower.setAdapter(hAdap2);
-
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         recViewLower.setLayoutManager(llm);
 
+        //Назначение обработчика текстовому полю
         EditText editText = (EditText) rootView.findViewById(R.id.etRequest);
         editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 hAdap2.setData(s);
             }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void afterTextChanged(Editable s) {}
