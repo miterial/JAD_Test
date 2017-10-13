@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -21,12 +23,10 @@ import java.util.List;
 public class ParseJSON extends AsyncTask<Void, Void, CardModel> {
 
     private String urlString;
-    private String[] titles;
     private String cardTitle;
 
-    public ParseJSON(String key, String[] titles, String cardTitle) {
-        this.urlString = key;
-        this.titles = titles;
+    public ParseJSON(String s, String cardTitle) {
+        this.urlString = "http://" + s + ".jsontest.com";
         this.cardTitle = cardTitle;
     }
 
@@ -54,16 +54,21 @@ public class ParseJSON extends AsyncTask<Void, Void, CardModel> {
 
             String resultJSON = buffer.toString();
 
+            //Получение списка ключей
+            String[] tokens = resultJSON.split("\\{\"");
+
             // Получение результата из файла json
             JSONObject dataObj;
             dataObj = new JSONObject(resultJSON);
-            for (String title : titles) {
-                tmpKeys.add(title);
-                if(!dataObj.optString(title).equals(""))
-                    tmpValues.add(dataObj.optString(title));
+            Iterator keys = dataObj.keys();
+
+            while(keys.hasNext()) {
+                String k = (String)keys.next();
+                tmpKeys.add(k);
+                if(!dataObj.optString(k).equals(""))
+                    tmpValues.add(dataObj.optString(k));
                 else tmpValues.add("NULL");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

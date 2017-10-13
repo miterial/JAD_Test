@@ -28,9 +28,9 @@ import java.util.concurrent.ExecutionException;
 
 public class HomeFragment extends Fragment {
 
-    private List<CardModel> modelsUpper, modelsLower;
-    Map<String, String[]> items;
+    List<String> items;
 
+    //Создание нового экземпляра фрагмента Главного меню
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
@@ -52,15 +52,40 @@ public class HomeFragment extends Fragment {
         return rootView;
     }
 
+    //Заполнение верхнего списка карточек
+    private void initUpperCards(View rootView) {
+        // Список карточек
+        RecyclerView recViewUpper = (RecyclerView) rootView.findViewById(R.id.upper_recyclerV);
+        List<CardModel> modelsUpper = new ArrayList<>();
+
+        // Servicenames
+        String[] urls = {"ip", "date", "headers"};
+
+        //Заголовки карточек
+        String[] cardTitles = {"IP-Address", "Date & Time", "Headers"};
+
+        // Создание карточки
+        for (int i = 0; i < urls.length; i++) {
+            modelsUpper.add(getCardData(urls[i], cardTitles[i]));
+        }
+
+        //Присвоение адаптера
+        CardAdapter hAdap1 = new CardAdapterUpper(modelsUpper, getContext());
+
+        recViewUpper.setAdapter(hAdap1);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recViewUpper.setLayoutManager(llm);
+    }
+
+    //Инициализация нижнего списка карточек
     private void initLowerCards(View rootView) {
         RecyclerView recViewLower = (RecyclerView) rootView.findViewById(R.id.lower_recyclerV);
 
-        modelsLower = new ArrayList<>();
+        List<CardModel> modelsLower = new ArrayList<>();
 
         List<String> keys = new ArrayList<>();
-        keys.add("");
         List<String> values = new ArrayList<>();
-        values.add("");
 
         modelsLower.add(new CardModel(keys, values, "Echo"));
         modelsLower.add(new CardModel(keys, values, "Validation"));
@@ -75,9 +100,7 @@ public class HomeFragment extends Fragment {
         EditText editText = (EditText) rootView.findViewById(R.id.etRequest);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -85,48 +108,15 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
     }
 
-    //Заполнение верхнего списка
-    private void initUpperCards(View rootView) {
-        RecyclerView recViewUpper = (RecyclerView) rootView.findViewById(R.id.upper_recyclerV);
-        modelsUpper = new ArrayList<>();
-        items = new HashMap<>();
-        // Компоненты, значения которых нужно получить с сайта
-        String[] ipTitle = {"ip"};
-        String[] datetimeTitle = {"date", "time"};
-        String[] headersTitle = {"X-Cloud-Trace-Context", "Upgrade-Insecure-Requests", "Accept-Language",
-                "Host", "Referer", "DNT", "User-Agent", "Accept"};
-        String[] keys = {"http://ip.jsontest.com/", "http://date.jsontest.com", "http://headers.jsontest.com/"};
-        items.put(keys[0], ipTitle);
-        items.put(keys[1], datetimeTitle);
-        items.put(keys[2], headersTitle);
-
-        String[] cardTitles = {"IP-Address", "Date & Time", "Headers"};
-
-        // Создание карточки
-        for (int i = 0; i < items.size(); i++) {
-            modelsUpper.add(getCardData(keys[i], items.get(keys[i]), cardTitles[i]));
-        }
-
-        //Присвоение адаптера
-        CardAdapter hAdap1 = new CardAdapterUpper(modelsUpper, getContext());
-
-        recViewUpper.setAdapter(hAdap1);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recViewUpper.setLayoutManager(llm);
-    }
-
-    private CardModel getCardData(String key, String[] titles, String cardTitle) {
+    private CardModel getCardData(String key, String cardTitle) {
 
         try {
-            ParseJSON pj = new ParseJSON(key, titles, cardTitle);
+            ParseJSON pj = new ParseJSON(key, cardTitle);
             pj.execute();
             return pj.get();
         } catch (InterruptedException | ExecutionException e) {

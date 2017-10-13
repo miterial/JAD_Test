@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         Fragment selectedFragment = null;
+                        //Показать определённый экран в зависимости от выбранного пункта меню
                         switch (item.getItemId()) {
                             case R.id.action_main:
                                 selectedFragment = HomeFragment.newInstance();
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, ContactsFragment.newInstance());
+        transaction.replace(R.id.frame_layout, HomeFragment.newInstance());
         transaction.commit();
     }
 

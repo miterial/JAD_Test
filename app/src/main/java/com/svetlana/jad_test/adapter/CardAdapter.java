@@ -99,7 +99,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
                 //Получение результата
                 String[] keyArr = new String[keyList.size()];
                 keyList.toArray(keyArr);
-                ParseJSON pj = new ParseJSON("http://echo.jsontest.com/" + data, keyArr, models.get(0).getCardTitle());
+                ParseJSON pj = new ParseJSON("http://echo.jsontest.com/" + data, models.get(0).getCardTitle());
                 pj.execute();
                 models.set(0, pj.get());
 
@@ -124,7 +124,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolderCard
             else keyArr = new String[] {"error", "object_or_array", "error_info", "validate"};
 
             try {
-                ParseJSON pj = new ParseJSON(url, keyArr, models.get(1).getCardTitle());
+                ParseJSON pj = new ParseJSON(url, models.get(1).getCardTitle());
                 pj.execute();
                 models.set(1, pj.get());
             } catch (InterruptedException | ExecutionException e) {
